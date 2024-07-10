@@ -1,76 +1,61 @@
 import smtplib
 from tkinter import *
-
+from tkinter import messagebox
 
 def send_message():
-    
-    address_info = address.get()
-    
-    email_body_info = email_body.get()
+    try:
+        sender_info = sender_address.get()
+        password_info = password.get()
+        address_info = address.get()
+        email_body_info = email_body.get("1.0", END)
 
-    sender_info = sender_address.get()
+        # Email validation can be added here
+        
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_info, password_info)
+        print("Login successful")
+        server.sendmail(sender_info, address_info, email_body_info)
+        print("Message sent")
 
-    password_info = password.get()
-    
-    server = smtplib.SMTP('smtp.gmail.com',587)
-    
-    server.starttls()
-    
-    server.login(sender_info,password_info)
-    
-    print("Login successful")
-    
-    server.sendmail(sender_info,address_info,email_body_info)
-    
-    print("Message sent")
-    
-    address_entry.delete(0,END)
-    email_body_entry.delete(0,END)
-    password_entry.delete(0,END)
-    sender_address_entry.delete(0,END)
-    
+        messagebox.showinfo("Success", "Message sent successfully")
+        
+        sender_address_entry.delete(0, END)
+        password_entry.delete(0, END)
+        address_entry.delete(0, END)
+        email_body.delete("1.0", END)
+        
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to send message: {str(e)}")
 
 gui = Tk()
-
 gui.geometry("500x500")
-
 gui.title("Email Sender App")
+gui.configure(background="#f0f8ff")  # AliceBlue background color
 
-heading = Label(text="Email Sender App",bg="yellow",fg="black",font="10",width="500",height="3")
-
+heading = Label(text="Email Sender App", bg="#4682b4", fg="white", font="Helvetica 16 bold", width="500", height="3")  # SteelBlue background color
 heading.pack()
-gui.configure(background = "light blue")
 
-sender_address_field = Label(text="Sender's Email :")
-sender_address_field.place(x=15,y=70)
-
+Label(text="Sender's Email:", bg="#f0f8ff", fg="#4682b4", font="Helvetica 12").place(x=15, y=70)
 sender_address = StringVar()
-sender_address_entry = Entry(textvariable=sender_address,width="30")
-sender_address_entry.place(x=15,y=100)
+sender_address_entry = Entry(textvariable=sender_address, width="30")
+sender_address_entry.place(x=15, y=100)
 
-sender_password_field = Label(text="Sender's Password :")
-sender_password_field.place(x=15,y=140)
-
+Label(text="Sender's Password:", bg="#f0f8ff", fg="#4682b4", font="Helvetica 12").place(x=15, y=140)
 password = StringVar()
-password_entry = Entry(textvariable=password,width="30")
-password_entry.place(x=15,y=170)
+password_entry = Entry(textvariable=password, width="30", show='*')
+password_entry.place(x=15, y=170)
 
-address_field = Label(text="Recipient Email :")
-address_field.place(x=15,y=210)
-
+Label(text="Recipient Email:", bg="#f0f8ff", fg="#4682b4", font="Helvetica 12").place(x=15, y=210)
 address = StringVar()
-address_entry = Entry(textvariable=address,width="30")
-address_entry.place(x=15,y=240)
+address_entry = Entry(textvariable=address, width="30")
+address_entry.place(x=15, y=240)
 
-email_body_field = Label(text="Message :")
-email_body_field.place(x=15,y=280)
+Label(text="Message:", bg="#f0f8ff", fg="#4682b4", font="Helvetica 12").place(x=15, y=280)
+email_body = Text(width="30", height="5")
+email_body.place(x=15, y=320)
 
-email_body = StringVar()
-email_body_entry = Entry(textvariable=email_body,width="30")
-email_body_entry.place(x=15,y=320,height="30")
-
-button = Button(gui,text="Send Message",command=send_message,width="30",height="2",bg="grey")
-
-button.place(x=15,y=400)
+button = Button(gui, text="Send Message", command=send_message, width="30", height="2", bg="#4682b4", fg="white")
+button.place(x=15, y=400)
 
 mainloop()
