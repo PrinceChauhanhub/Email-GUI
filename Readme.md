@@ -1,5 +1,5 @@
 ## Requirements :
-- ** Email app password of sender**
+- **Email app password of sender**
 
 ## Email GUI Functionalities : 🚀
 
